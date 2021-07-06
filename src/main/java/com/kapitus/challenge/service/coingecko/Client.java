@@ -1,8 +1,8 @@
 package com.kapitus.challenge.service.coingecko;
 
 import com.kapitus.challenge.PriceApiException;
-import com.kapitus.challenge.PriceApiUtil;
-import com.kapitus.challenge.lambda.HandlerApiGateway;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -11,13 +11,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class Client {
     private static final Logger logger = LoggerFactory.getLogger(Client.class);
 
-    private final String API_BASE_URL = "https://api.coingecko.com/api/v3/";
+    private static final String API_BASE_URL = "https://api.coingecko.com/api/v3/";
 
     private final Retrofit.Builder builder = new Retrofit.Builder()
             .baseUrl(API_BASE_URL)
@@ -29,8 +26,9 @@ public class Client {
         return retrofit.create(serviceClass);
     }
 
-    public <T> T executeSync(Call<T> call) throws PriceApiException{
-        logger.info("Call {}", call.request().toString());
+    public <T> T executeSync(Call<T> call) throws PriceApiException {
+        String callString = call.request().toString();
+        logger.info("Call {}", callString);
         try {
             Response<T> response = call.execute();
             if (response.isSuccessful()) {

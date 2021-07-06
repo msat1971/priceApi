@@ -1,0 +1,47 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Resources": {
+    "kapitusChallengeCoinsPrice": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Handler": "com.kapitus.challenge.lambda.HandlerApiGateway::handleRequest",
+        "Runtime": "java8",
+        "CodeUri": ".",
+        "Description": "",
+        "MemorySize": 512,
+        "Timeout": 15,
+        "Role": "arn:aws:iam::962329048270:role/service-role/kapitusChallengeCoinsPrice-role-z4638yym",
+        "Events": {
+          "Api1": {
+            "Type": "Api",
+            "Properties": {
+              "Path": "/coins/{ticker}",
+              "Method": "GET"
+            }
+          }
+        }
+      }
+    },
+    "AuthorizeApi": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Handler": "index.handler",
+        "Runtime": "nodejs14.x",
+        "CodeUri": ".",
+        "Description": "",
+        "MemorySize": 128,
+        "Timeout": 3,
+        "Role": "arn:aws:iam::962329048270:role/service-role/AuthorizeApi-role-5a9fhoit",
+        "Events": {
+          "Api1": {
+            "Type": "Api",
+            "Properties": {
+              "Path": "/MyResource",
+              "Method": "ANY"
+            }
+          }
+        }
+      }
+    }
+  }
+}

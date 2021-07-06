@@ -79,4 +79,11 @@ class PriceApiTest {
         GetCoinsResponse response = PriceApi.getCoinPrice("fake ticker");
         assertEquals(noRecordResults, PriceApiUtil.convertToJson(response));
     }
+
+    @Test
+    void createExceptionResponse() {
+        GetCoinsResponse response;
+        response = PriceApi.createExceptionResponse("Test Failure Message", new RuntimeException());
+        assertTrue(PriceApiUtil.convertToJson(response).length() > 1);
+    }
 }

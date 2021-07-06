@@ -177,6 +177,11 @@ public class PriceApi {
 
         String jsonSingle = PriceApiUtil.convertToJson(PriceApi.getCoinPrice("BTC"));
         logger.info(jsonSingle);
+
+        GetCoinsResponse response;
+        response = PriceApi.createExceptionResponse("Test Failure Message", new RuntimeException());
+        String jsonErrorResponse = PriceApiUtil.convertToJson(response);
+        logger.info(jsonErrorResponse);
     }
 
 }
