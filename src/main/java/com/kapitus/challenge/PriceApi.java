@@ -4,12 +4,14 @@ import com.kapitus.challenge.model.coingecko.*;
 import com.kapitus.challenge.model.kapitus.Ticker;
 import com.kapitus.challenge.service.coingecko.ApiClient;
 import com.kapitus.challenge.service.kapitus.CoinGeckoApi;
-
-import java.util.*;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.*;
+
+/**
+ * The type Price api.
+ */
 public class PriceApi {
     private static final Logger logger = LoggerFactory.getLogger(PriceApi.class);
     private static final ApiClient apiClient;
@@ -24,10 +26,20 @@ public class PriceApi {
     private PriceApi() {
     }
 
+    /**
+     * Are tickers loaded boolean.
+     *
+     * @return the boolean
+     */
     public static boolean isTickersLoaded() {
         return tickersLoaded;
     }
 
+    /**
+     * Service is running boolean.
+     *
+     * @return the boolean
+     */
     public static final boolean serviceIsRunning() {
         boolean running;
         try {
@@ -39,6 +51,9 @@ public class PriceApi {
         return running;
     }
 
+    /**
+     * Load tickers.
+     */
     public static final void loadTickers() {
         if (serviceIsRunning()) {
             logger.info("CoinGecko is live!");
@@ -60,6 +75,13 @@ public class PriceApi {
         }
     }
 
+    /**
+     * Gets coins from tickers.
+     *
+     * @param symbols the symbols
+     * @return the coins from tickers
+     * @throws PriceApiException the price api exception
+     */
     public static final List<Coin> getCoinsFromTickers(String symbols) throws PriceApiException {
         logger.info("Finding coins for symbols \"{}\"", symbols);
         //Load tickers (ticker and Id lookup list) if not loaded
@@ -89,6 +111,13 @@ public class PriceApi {
         }
     }
 
+    /**
+     * Gets coin ids.
+     *
+     * @param coinList the coin list
+     * @return the coin ids
+     * @throws PriceApiException the price api exception
+     */
     public static final String getCoinIds(List<Coin> coinList) throws PriceApiException {
         StringBuilder sb = new StringBuilder();
         for (Coin c : coinList) {
@@ -100,6 +129,13 @@ public class PriceApi {
         return sb.toString();
     }
 
+    /**
+     * Gets coin prices as list.
+     *
+     * @param symbols the symbols
+     * @return the coin prices as list
+     * @throws PriceApiException the price api exception
+     */
     public static final List<Coin> getCoinPricesAsList(String symbols) throws PriceApiException {
         String idList;
         List<Coin> coinList;
@@ -127,6 +163,12 @@ public class PriceApi {
         return coinList;
     }
 
+    /**
+     * Gets coin price.
+     *
+     * @param tickerString the ticker string
+     * @return the coin price
+     */
     public static GetCoinsResponse getCoinPrice(String tickerString) {
         List<Coin> coinList;
         GetCoinsResponse response = null;
@@ -139,7 +181,7 @@ public class PriceApi {
                 response.setData(coinList);
                 response.setStatus("success");
 
-            } else if (size == 1 ) {
+            } else if (size == 1) {
                 response = new ResponseSingleResource();
                 response.setData(coinList.get(0));
                 response.setStatus("success");
@@ -156,10 +198,17 @@ public class PriceApi {
             response = createExceptionResponse("Failed getting prices", e);
         }
 
-        return  response;
+        return response;
 
     }
 
+    /**
+     * Create exception response get coins response.
+     *
+     * @param status the status
+     * @param e      the e
+     * @return the get coins response
+     */
     public static GetCoinsResponse createExceptionResponse(String status, Exception e) {
         GetCoinsResponse response = new GetCoinsResponse();
         ErrorObject error = new ErrorObject();
@@ -171,6 +220,11 @@ public class PriceApi {
         return response;
     }
 
+    /**
+     * The entry point of application.
+     *
+     * @param args the input arguments
+     */
     public static void main(String[] args) {
         String json = PriceApiUtil.convertToJson(PriceApi.getCoinPrice("BTC, ETH, DOGE"));
         logger.info(json);
